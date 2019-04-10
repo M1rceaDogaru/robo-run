@@ -7,14 +7,18 @@ public class Projectile : MonoBehaviour
     public int Direction;
     public float Damage = 30;
 
+    public AudioSource ImpactSound;
+
     public Player FiredByPlayer;
 
     private Rigidbody2D _rigidbody;
+    private SpriteRenderer _renderer;
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     private void FixedUpdate()
@@ -43,7 +47,9 @@ public class Projectile : MonoBehaviour
                 }
             }
 
-            Destroy(gameObject);
+            ImpactSound.Play();
+            _renderer.enabled = false;
+            Destroy(gameObject, 0.5f);
         }
     }
 }

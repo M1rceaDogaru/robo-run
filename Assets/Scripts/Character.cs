@@ -7,8 +7,10 @@ public class Character : MonoBehaviour
     public float JumpForce = 10;
     public bool IsPlayer;
 
-    public KeyCode Jump = KeyCode.Space;
-    public KeyCode Shoot = KeyCode.LeftControl;
+    public KeyCode Jump = KeyCode.X;
+    public KeyCode Shoot = KeyCode.Z;
+
+    public AudioSource JumpSound;
 
     public bool IsRunning;
 
@@ -46,9 +48,8 @@ public class Character : MonoBehaviour
             if (_rigidbody.velocity.y == 0 && Input.GetKeyDown(Jump))
             {
                 _rigidbody.AddForce(new Vector2(0, JumpForce), ForceMode2D.Impulse);
+                JumpSound.Play();
             }
         }
-
-        
     }
 }

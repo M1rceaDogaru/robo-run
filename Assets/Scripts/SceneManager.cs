@@ -12,6 +12,25 @@ public class SceneManager : MonoBehaviour
     public GameObject FailHealth;
     public GameObject GameUi;
 
+    public KeyCode InteractionKey = KeyCode.X;
+
+    private bool _gameEnded;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(InteractionKey))
+        {
+            if (MainMenu.activeInHierarchy)
+            {
+                StartGame();
+            }
+            else if (_gameEnded)
+            {
+                Restart();
+            }
+        }
+    }
+
     public void StartGame()
     {
         MainMenu.SetActive(false);
@@ -21,18 +40,34 @@ public class SceneManager : MonoBehaviour
         AiManager.IsRunning = true;
     }
 
-    public void Failed()
+    public void FailedHealth()
+    {
+        EndGame();
+        FailHealth.SetActive(true);
+    }
+
+    public void FailedEnergy()
+    {
+        EndGame();
+        FailEnergy.SetActive(true);
+    }
+
+    public void FailedSadness()
+    {
+        EndGame();
+        FailSadness.SetActive(true);
+    }
+
+    private void EndGame()
     {
         Player.IsRunning = false;
         AiManager.IsRunning = false;
-
-        FailHealth.SetActive(true);
+        _gameEnded = true;
     }
 
     public void CompleteMission()
     {
-        Player.IsRunning = false;
-        AiManager.IsRunning = false;
+        EndGame();
         Win.SetActive(true);
     }
 

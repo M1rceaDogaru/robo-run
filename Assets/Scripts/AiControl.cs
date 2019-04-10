@@ -12,6 +12,8 @@ public class AiControl : MonoBehaviour
     public Transform FirePoint;
     public LayerMask ProjectileCollisionMask;
 
+    public AudioSource FireSound;
+
     private Character _character;
     private float _currentFireTime;
 
@@ -57,6 +59,8 @@ public class AiControl : MonoBehaviour
         var projectile = projectileObject.GetComponent<Projectile>();
         projectile.Direction = -1;
         projectile.CollisionMask = ProjectileCollisionMask;
+
+        FireSound.Play();
     }
 }
 

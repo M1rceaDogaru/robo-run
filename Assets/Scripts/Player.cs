@@ -21,6 +21,10 @@ public class Player : MonoBehaviour
 
     public SceneManager Manager;
 
+    public AudioSource FireSound;
+    public AudioSource CollisionSound;
+    public AudioSource PickupSound;
+
     public Text HealthUi;
     public Text EnergyUi;
     public Text SadnessUi;
@@ -52,6 +56,8 @@ public class Player : MonoBehaviour
         {
             _currentEnergy = MaxEnergy;
         }
+
+        PickupSound.Play();
     }
 
     // Start is called before the first frame update
@@ -79,10 +85,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (_currentSadness > MaxSadness || _currentHealth <= 0 || _currentEnergy <= 0)
-        {
-            EndGame();
-        }
+        CheckEndGame();
 
         if (_currentSadness > 0)
         {
@@ -108,6 +111,22 @@ public class Player : MonoBehaviour
         UpdateUi();
     }
 
+    void CheckEndGame()
+    {
+        if (_currentSadness > MaxSadness)
+        {
+            Manager.FailedSadness();
+        }
+        else if (_currentHealth <= 0)
+        {
+            Manager.FailedHealth();
+        }
+        else if (_currentEnergy <= 0)
+        {
+            Manager.FailedEnergy();
+        }
+    }
+
     void UpdateUi()
     {
         HealthUi.text = _currentHealth.ToString("N0");
@@ -122,11 +141,8 @@ public class Player : MonoBehaviour
         projectile.Direction = 1;
         projectile.CollisionMask = ProjectileCollisionMask;
         projectile.FiredByPlayer = this;
-    }
 
-    void EndGame()
-    {
-        Manager.Failed();
+        FireSound.Play();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -136,6 +152,9 @@ public class Player : MonoBehaviour
             var enemy = collision.gameObject.GetComponent<AiControl>();
             enemy.DestroyUnit();
             TakeDamage(DamageWhenEnemyCollided);
+            IncreaseSadness();
+
+            CollisionSound.Play();
         }
     }
 
